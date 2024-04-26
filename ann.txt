@@ -1,0 +1,60 @@
+// Compute the annihilator of a subspace of a Lie algebra module.
+// L is a Lie algebra over a field K,
+// rho is a representation of L over K,
+// V is VectorSpace(Image(rho)),
+// W is a subspace of V.
+
+ann:= function(L,K,rho,V,W)
+
+	// Get the dimension of L and of the module V
+	dimL := Dimension(L);
+	dimV := Dimension(V);
+
+	// Vector space of matrices in which Image(rho) lives
+	Vrho := KMatrixSpace(K, dimV, dimV);
+
+	// Vector space in which L lives
+	VL := VectorSpace(K,dimL);
+
+	// Get subspace of Vrho corresponding to Image(rho)
+	im := sub<Vrho|[Vrho!x:x in Basis(Image(rho))]>;
+
+	// Initialise output as the whole Image(rho)
+	out := im;
+
+	// We only want to keep the elements of Image(rho) that 
+	// preserve the subspace W.
+	for w in Basis(W) do
+
+		// Find the image of the basis element w under the action of L
+		M := Matrix(K, dimL, dimV, [w*Transpose(b) : b in Basis(im)]);
+		imw := W meet sub<V|[w*Transpose(b) : b in Basis(im)]>;
+
+		// U consists of the elements of Image(rho) that send w to 0
+		U := Nullspace(M);
+
+		// It remains to search for the elements of Image(rho) that
+		// send w to a non-zero vector in W. This can be done by solving 
+		// linear equations.
+
+		pullBackBasis := [];
+		finalBasis := [VL!x : x in Basis(U)];
+		for b in Basis(imw) do
+			Append(~finalBasis,VL!Solution(M,b));
+		end for;
+		for u in finalBasis do
+			tot := Vrho!0;
+			for i in [1..dimL] do
+				tot := tot + u[i]*im.i;
+			end for;
+			Append(~pullBackBasis,tot);
+		end for;
+		//update to only keep the elements of Image(rho) that send w to W
+		out := out meet sub<Vrho| pullBackBasis>;
+	end for;
+
+	// Once we have run over all basis elements of W, we are left with the 
+	// subspace of Image(rho) that preserves W.
+	return out;
+
+end function;
