@@ -1,0 +1,25 @@
+/* 
+Find the connected component of the generic stabilizer for
+the action of B_4 on 1-spaces of its (half) spin module.
+
+The following code computes the annihilator of a random 1-space in the spin module.
+Since the dimension of the annihilator is 21, and this is the dimension of a dense stabilizer,
+it must be the case that the 1-space is a generic one. We can then see that the Lie-algebra
+annihilator is a B_3 subalgebra of B_4. Indeed B_3 is the generic stabilizer for this action.
+*/
+
+load "ann.txt";
+
+SetSeed(1);
+
+q := 7;
+K := GF(q);
+L := LieAlgebra("B4",K:Isogeny:="SC");
+rho:=HighestWeightRepresentation(L,[0,0,0,1]);
+V := VectorSpace(K,16);
+W := sub<V|V.1>*Random(SL(V));
+
+SLie := ann(L,K,rho,V,W);
+Dimension(SLie);
+CompositionSeries(sub<L|[Inverse(rho)(x) : x in Basis(SLie)]>);
+
