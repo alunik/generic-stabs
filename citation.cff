@@ -10,3 +10,4 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.13134216
 date-released: 2024-30-07
+repository-code: "https://github.com/alunik/generic-stabs"
