@@ -1,0 +1,25 @@
+// Get 2.2^4.Sym(5) directly from Sp(4,7)
+
+cms := ClassicalMaximals("S",4,7);
+G:= cms[#cms-1];
+X := sub<G|ConjugacyClasses(G)[22][3]>;
+im:=IntermediateSubgroups(G,X);
+imNN:=[H:H in im|IsNormal(H,X) eq false];
+for H in imNN do
+	ChiefFactors(H);
+end for;
+
+// The first element of imNN is the subgroup 2.2^4.5
+
+G:=imNN[1];
+C := CharacterTable(G);
+
+chi:= C[6];
+sym2chi := Symmetrization(chi,[2,0]);
+for i in [1..#C] do
+	if InnerProduct(C[i],sym2chi) eq 1 then
+		C[i];
+	end if;
+end for;
+
+// The output consists of the two consitutents of S^2(chi), two distinct self dual characters of degree 5.

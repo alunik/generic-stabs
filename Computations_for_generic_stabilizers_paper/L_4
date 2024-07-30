@@ -1,0 +1,31 @@
+// Get the subgroup M = 2.2^4.Alt(5) in Sp(4,5)
+cms:=ClassicalMaximals("S",4,5);
+M:=cms[#cms-1];
+
+// There are 2 conjugacy classes of elements of order 10, leading to the same result
+U := sub<M|ConjugacyClasses(M)[15][3]>;
+
+/* 
+List the chief factors of overgroups of U in M that do not normalise U.
+In each case determine the composition factors for the action on V, by taking the symmetric square of their module.
+Also check that all composition factors are indeed absolutely irreducible.
+*/
+
+im:=IntermediateSubgroups(M,U);
+imNN:=[H:H in im|IsNormal(H,U) eq false];
+
+for H in imNN do
+	ChiefFactors(H);
+	V_H := GModule(H);
+	CompositionFactors(V_H);
+	CompositionFactors(SymmetricSquare(V_H));
+	// Output "true" as all composition factors of the symmetric sqaure are aboslutely irreducible.
+	&and[IsAbsolutelyIrreducible(comp) : comp in CompositionFactors(SymmetricSquare(V_H))]; 
+end for;
+
+// Check that 2.2^4.5 has two self-dual non-isomorphic composition factors on V
+H := imNN[1];
+V_H := GModule(H);
+comps := CompositionFactors(SymmetricSquare(V_H));
+&and[IsSelfDual(comp) : comp in comps];
+IsIsomorphic(comps[1],comps[2]);

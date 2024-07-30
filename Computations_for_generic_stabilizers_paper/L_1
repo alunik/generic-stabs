@@ -1,0 +1,46 @@
+// Double covers of Alt6, Sym6 and Alt7
+
+//Construct the double cover of Sym(6).
+G := Sym(6);
+F := FPGroup(G);
+F2 := pCover(G, F, 2);
+G2 := PermutationGroup(F2);
+
+//There is a single conjugacy class of elements of order 10. Such an element generates Z(G).<x>
+X2 := sub<G2|ConjugacyClasses(G2)[15][3]>;
+
+/* 
+List the chief factors of overgroups of X2 in G2 that do not normalise X2.
+Note how they all contain a double cover of Alt(5).
+To run the check for Alt(7), change G to Alt(7) and set X2 := sub<G2|ConjugacyClasses(G2)[13][3]>;
+*/
+
+im:=IntermediateSubgroups(G2,X2);
+imNN:=[H:H in im|IsNormal(H,X2) eq false];
+for H in imNN do
+	ChiefFactors(H);
+end for;
+
+// We now determine how a double cover of Alt(5) acts on V
+
+G := Alt(5);
+F := FPGroup(G);
+F2 := pCover(G, F, 2);
+G2 := PermutationGroup(F2);
+C := CharacterTable(G2);
+
+possibleChis := [C[2]+C[3],C[6]];
+for chi in possibleChis do
+	IsSymplecticCharacter(chi);
+	sym2chi := Symmetrization(chi,[2,0]);
+	[InnerProduct(X[i],sym2chi) : i in [1..#C]];
+end for;
+
+// The output [ 0, 0, 0, 1, 1, 0, 1, 0, 0 ] indicates that 2.Alt(5) acts on V as 3+3+4. 
+
+
+
+
+
+
+

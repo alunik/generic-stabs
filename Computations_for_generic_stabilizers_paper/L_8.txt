@@ -1,0 +1,81 @@
+// SL(2,7) case (p not 2).
+
+G := SL(2,7);
+
+// Range over all conjugacy classes of subgroups isomorphic to S^\dag
+
+for rec in Subgroups(G) do
+	S := rec`subgroup;
+	if IdentifyGroup(S) eq <21,1> then
+		// Find all intermediate subgroups between S and G
+		im:=IntermediateSubgroups(G,S);
+		// Filter out the ones that normalise S
+		imNN:=[H:H in im|IsNormal(H,S) eq false];
+		// Print the ChiefFactors of such subgroups
+		for H in imNN do
+			ChiefFactors(H);
+		end for;
+	end if;
+end for;
+// There are no non-normalising overgroups.
+
+
+// SL(2,13) case (p not 2).
+
+G := SL(2,13);
+
+// Range over all conjugacy classes of subgroups isomorphic to S^\dag
+
+for rec in Subgroups(G) do
+	S := rec`subgroup;
+	if Order(S) eq 21 then
+		S;
+	end if;
+end for;
+// There are no subgroups of order 21.
+
+
+// U(3,3) case.
+
+G := SU(3,3);
+
+// Range over all conjugacy classes of subgroups isomorphic to S^\dag
+
+for rec in Subgroups(G) do
+	S := rec`subgroup;
+	if Order(S) eq 21 and IdentifyGroup(S) eq <21,1> then
+		// Find all intermediate subgroups between S and G
+		im:=IntermediateSubgroups(G,S);
+		// Filter out the ones that normalise S
+		imNN:=[H:H in im|IsNormal(H,S) eq false];
+		// Print the ChiefFactors of such subgroups
+		for H in imNN do
+			ChiefFactors(H);
+		end for;
+	end if;
+end for;
+// The only possibility is PSL(2,7).
+
+
+// J_2 case.
+
+// Construct 2.J2 by taking the appropriate maximal subgroup of Sp_6(5).
+G := ClassicalMaximals("S",6,5)[10];
+
+// Range over all conjugacy classes of subgroups isomorphic to S^\dag
+
+for rec in Subgroups(G) do
+	S := rec`subgroup;
+	if Order(S) eq 21 and IdentifyGroup(S) eq <21,1> then
+		// Find all intermediate subgroups between S and G
+		im:=IntermediateSubgroups(G,S);
+		// Filter out the ones that normalise S
+		imNN:=[H:H in im|IsNormal(H,S) eq false];
+		// Print the ChiefFactors of such subgroups
+		for H in imNN do
+			ChiefFactors(H);
+		end for;
+	end if;
+end for;
+
+// The only possibilities are PSL(2,7), SL(2,7), U(3,3).

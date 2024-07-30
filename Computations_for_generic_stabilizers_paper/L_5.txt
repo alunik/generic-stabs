@@ -1,0 +1,35 @@
+//Construct C_3 and its lambda_2 representation over the field of fractions of a polynomial ring over GF(7).
+R<a1,a2,a3,a4,a5,a6,a7,a8,a9,t1,t2,t3,t1inv,t2inv,t3inv> := PolynomialRing(GF(7),15);
+F<b1,b2,b3,b4,b5,b6,b7,b8,b9,x1,x2,x3,x1inv,x2inv,x3inv> := FieldOfFractions(R);
+C := GroupOfLieType("C3",F:Isogeny:="SC");
+f:=HighestWeightRepresentation(C,[0,1,0]);
+V3:=VectorSpace(F,3);
+
+//Define an arbitrary g in the standard Borel.
+g:=elt<C|<3,a9>,<5,a8>,<7,a7>,<6,a6>,<8,a5>,<9,a4>,<2,a3>,<4,a2>,<1,a1>,V3![t1,t2,t3]>;
+
+// Define a basis for W7, which is easily seen to correspond to W^*.
+V:=VectorSpace(F,14);
+v1:=V.1+4*V.11+3*V.12;
+v2:=V.3+3*V.14;
+v3:=V.4+4*V.14;
+v4:=V.5+5*V.6;
+v5:=V.7+3*V.8;
+v6:=V.9+5*V.10;
+v7:=V.13;
+W7:=sub<V|v1,v2,v3,v4,v5,v6,v7>;
+//Extend the basis
+B:=[v1,v2,v3,v4,v5,v6,v7,V.2,V.6,V.8,V.10,V.11,V.12,V.14];
+VB:=VectorSpaceWithBasis(B);
+
+// Build set of generators of the ideal I
+polys := {x1*x1inv-1,x2*x2inv-1,x3*x3inv-1};
+for v in Basis(W7) do
+	for poly in Coordinates(VB,v*f(g))[8..14] do
+		Include(~polys,poly);
+	end for;
+end for;
+
+// Build ideal I and determine its Groebner basis. It takes under 1 second.
+I := ideal<R|[Numerator(p):p in polys]>;
+time GroebnerBasis(I);

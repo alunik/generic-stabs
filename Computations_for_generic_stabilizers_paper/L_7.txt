@@ -1,0 +1,12 @@
+for i in [1..6] do
+
+	time B, badPrimes := findGroebnerBasis(Rationals(), i);
+	"The case i = ", i;
+	B;
+
+	for p in [x : x in badPrimes | x in [3,7] eq false] do
+		"Checking the prime p = ", p;
+		findGroebnerBasis(GF(p), i);
+	end for;
+
+end for;
